@@ -24,7 +24,8 @@ setup(
             'simple_subscriber = bumperbot_py_examples.simple_subscriber:main',
             'simple_parameter = bumperbot_py_examples.simple_parameter:main',
             'simple_turtlesim_kinematics = bumperbot_py_examples.simple_turtlesim_kinematics:main',
-            'teleop_to_stamped = bumperbot_py_examples.teleop_to_stamped:main'
+            'teleop_to_stamped = bumperbot_py_examples.teleop_to_stamped:main',
+            'simple_tf_kinematics = bumperbot_py_examples.simple_tf_kinematics:main'
         ],
     },
 )
