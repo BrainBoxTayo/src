@@ -7,7 +7,7 @@ class TeleopToStamped(Node):
     def __init__(self):
 
         super().__init__('teleop_to_stamped')
-        self.subscriber = self.create_subscription(Twist, '/key_vel', self.listener_callback, 10)
+        self.subscriber = self.create_subscription(Twist, '/cmd_vel', self.listener_callback, 10)
         self.publisher = self.create_publisher(TwistStamped, '/bumperbot_controller/cmd_vel', 10)
 
 

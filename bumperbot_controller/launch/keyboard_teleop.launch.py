@@ -7,8 +7,8 @@ def generate_launch_description():
 
 
     key_teleop = Node(
-        package="key_teleop",
-        executable="key_teleop",
+        package="teleop_twist_keyboard",
+        executable="teleop_twist_keyboard",
         output="screen"
     )
 
