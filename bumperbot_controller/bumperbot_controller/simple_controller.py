@@ -70,6 +70,8 @@ class simpleController(Node):
         linear_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2 # From Kinematics
         angular_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / self.wheel_separation # From Kinematics
 
+        self.get_logger().info("Linear_Velocity: {}, Angular_velocity: {}".format(linear_vel, angular_vel))
+
 
 def main():
     rclpy.init()
