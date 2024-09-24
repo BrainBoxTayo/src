@@ -85,7 +85,7 @@ class SimpleTFKinematics(Node):
         self.last_x = self.dynamic_transform_stamped.transform.translation.x
         self.rotations_counter += 1
         self.last_orientation = q
-        self.get_logger().info("rotations: {}".format(self.rotations_counter))
+        # self.get_logger().info("rotations: {}".format(self.rotations_counter))
 
         if self.rotations_counter >= 100:
             self.orientation_increment = quaternion_inverse(self.orientation_increment)

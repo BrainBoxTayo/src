@@ -4,8 +4,10 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 from geometry_msgs.msg import TwistStamped
+from sensor_msgs.msg import JointState
 import numpy as np
-
+from rclpy.time import Time
+from rclpy.constants import S_TO_NS
 
 class simpleController(Node):
     def __init__(self):
@@ -21,11 +23,17 @@ class simpleController(Node):
 
         self.get_logger().info("Using wheel radius {}".format(self.wheel_radius))
         self.get_logger().info("Using Wheel Separation: {}".format(self.wheel_separation))
+        
+        self.left_wheel_prev_pos = 0.0
+        self.right_wheel_prev_pos = 0.0
+        self.prev_time = self.get_clock().now()
 
         self.wheel_cmd_pub = self.create_publisher(
             Float64MultiArray, "simple_velocity_controller/commands", 10)
         self.vel_sub = self.create_subscription(
             TwistStamped, "bumperbot_controller/cmd_vel", self.velCallback, 10)
+        self.joint_sub = self.create_subscription(
+            JointState, "joint_states", self.jointCallback, 10)
 
         self.speed_conversion_matrix = np.array([[self.wheel_radius / 2, self.wheel_radius / 2],
                                                 [self.wheel_radius / self.wheel_separation, -(self.wheel_radius / self.wheel_separation)]])
@@ -43,6 +51,24 @@ class simpleController(Node):
                                 wheel_speed[0, 0]]
 
         self.wheel_cmd_pub.publish(wheel_speed_msg)
+    
+    def jointCallback(self, msg):
+        # for now in gazebo, the messages are gotten from the jointStates topic.
+        # IRL, we would get the position data from an encoder
+        dp_left = msg.position[1] - self.left_wheel_prev_pos # change in positions of wheel
+        dp_right = msg.position[0] - self.right_wheel_prev_pos
+        dt = Time.from_msg(msg.header.stamp) - self.prev_time # change in time to get to curr position
+        
+        #update all holders
+        self.left_wheel_prev_pos = msg.position[1]
+        self.right_wheel_prev_pos = msg.position[0]
+        self.prev_time = Time.from_msg(msg.header.stamp)
+
+        phi_left = dp_left / ( dt.nanoseconds / S_TO_NS )
+        phi_right = dp_right / ( dt.nanoseconds / S_TO_NS ) # Velocities of the wheels
+
+        linear_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2 # From Kinematics
+        angular_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / self.wheel_separation # From Kinematics
 
 
 def main():
