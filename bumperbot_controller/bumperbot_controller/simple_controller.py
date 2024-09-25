@@ -3,13 +3,14 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
-from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import TwistStamped, TransformStamped
 from sensor_msgs.msg import JointState
 import numpy as np
 from rclpy.time import Time
 from nav_msgs.msg import Odometry
 from rclpy.constants import S_TO_NS
 from math import sin, cos
+from tf2_ros import TransformBroadcaster
 from tf_transformations import quaternion_from_euler
 
 class simpleController(Node):
@@ -60,7 +61,11 @@ class simpleController(Node):
         self.odom_msg.pose.pose.orientation.z = 0.0 
         self.odom_msg.pose.pose.orientation.w = 1.0 
         
-        
+        self.br = TransformBroadcaster(self)
+        self.transform_stamped = TransformStamped()
+        self.transform_stamped.header.frame_id = "odom"
+        self.transform_stamped.child_frame_id = "base_footprint"
+        self
         self.get_logger().info("The conversion matrix is {}".format(self.speed_conversion_matrix))
 
     def velCallback(self, msg):
@@ -82,7 +87,7 @@ class simpleController(Node):
         dp_right = msg.position[0] - self.right_wheel_prev_pos
         dt = Time.from_msg(msg.header.stamp) - self.prev_time # change in time to get to curr position
         
-        #update all holders
+        #update all previous variables
         self.left_wheel_prev_pos = msg.position[1]
         self.right_wheel_prev_pos = msg.position[0]
         self.prev_time = Time.from_msg(msg.header.stamp)
@@ -113,7 +118,16 @@ class simpleController(Node):
         self.odom_msg.twist.twist.linear.x = linear_vel
         self.odom_msg.twist.twist.angular.z = angular_vel
 
+        self.transform_stamped.transform.translation.x = self.pos_x
+        self.transform_stamped.transform.translation.y = self.pos_y
+        self.transform_stamped.transform.rotation.x = q[0]
+        self.transform_stamped.transform.rotation.y = q[1]
+        self.transform_stamped.transform.rotation.z = q[2]
+        self.transform_stamped.transform.rotation.w = q[3]
+        self.transform_stamped.header.stamp = self.get_clock().now().to_msg()
+
         self.odom_pub.publish(self.odom_msg)
+        self.br.sendTransform(self.transform_stamped)
 
 def main():
     rclpy.init()
