@@ -18,22 +18,22 @@
     </transmission>
     <gazebo reference="wheel_right_link">
         <!-- friction coeeficients-->
-        <mu1>100000000000000.0</mu1>
-        <mu2>100000000000000.0</mu2>
-        <kp>1000000000000.0</kp>
+        <mu1>10000000.0</mu1>
+        <mu2>10000000.0</mu2>
+        <kp>1000.0</kp>
         <kd>10.0</kd>
-        <minDeoth>0.001</minDeoth>
+        <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
         <fdir>1 0 0</fdir>
     </gazebo>
 
     <gazebo reference="wheel_left_link">
         <!-- friction coeeficients-->
-        <mu1>100000000000000.0</mu1>
-        <mu2>100000000000000.0</mu2>
-        <kp>1000000000000.0</kp>
+        <mu1>10000000.0</mu1>
+        <mu2>10000000.0</mu2>
+        <kp>1000.0</kp>
         <kd>10.0</kd>
-        <minDeoth>0.001</minDeoth>
+        <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
         <fdir>1 0 0</fdir>
     </gazebo>
@@ -44,7 +44,7 @@
         <mu2>0.1</mu2>
         <kp>1000000.0</kp>
         <kd>100.0</kd>
-        <minDeoth>0.001</minDeoth>
+        <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
     </gazebo>
 
@@ -54,7 +54,7 @@
         <mu2>0.1</mu2>
         <kp>1000000.0</kp>
         <kd>100.0</kd>
-        <minDeoth>0.001</minDeoth>
+        <minDepth>0.001</minDepth>
         <maxVel>0.1</maxVel>
     </gazebo>
 

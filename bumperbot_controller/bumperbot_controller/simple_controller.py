@@ -34,6 +34,10 @@ class simpleController(Node):
         self.pos_x = 0.0
         self.pos_y = 0.0
         self.pos_theta = 0.0
+        
+        self.pos_x = 0.0
+        self.pos_y = 0.0
+        self.pos_theta = 0.0
 
         self.wheel_cmd_pub = self.create_publisher(
             Float64MultiArray, "simple_velocity_controller/commands", 10)
@@ -85,6 +89,8 @@ class simpleController(Node):
 
         phi_left = dp_left / ( dt.nanoseconds / S_TO_NS )
         phi_right = dp_right / ( dt.nanoseconds / S_TO_NS ) # Velocities of the wheels
+        
+        # self.get_logger().info("msg.position[1]: {}  msg.position[0]: {}".format(msg.position[1],msg.position[0]))
         
         # self.get_logger().info("msg.position[1]: {}  msg.position[0]: {}".format(msg.position[1],msg.position[0]))
 
