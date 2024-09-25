@@ -8,6 +8,7 @@ from sensor_msgs.msg import JointState
 import numpy as np
 from rclpy.time import Time
 from rclpy.constants import S_TO_NS
+from math import sin, cos
 
 class simpleController(Node):
     def __init__(self):
@@ -27,6 +28,10 @@ class simpleController(Node):
         self.left_wheel_prev_pos = 0.0
         self.right_wheel_prev_pos = 0.0
         self.prev_time = self.get_clock().now()
+        
+        self.pos_x = 0.0
+        self.pos_y = 0.0
+        self.pos_theta = 0.0
 
         self.wheel_cmd_pub = self.create_publisher(
             Float64MultiArray, "simple_velocity_controller/commands", 10)
@@ -66,11 +71,19 @@ class simpleController(Node):
 
         phi_left = dp_left / ( dt.nanoseconds / S_TO_NS )
         phi_right = dp_right / ( dt.nanoseconds / S_TO_NS ) # Velocities of the wheels
+        
+        # self.get_logger().info("msg.position[1]: {}  msg.position[0]: {}".format(msg.position[1],msg.position[0]))
 
         linear_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2 # From Kinematics
-        angular_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / self.wheel_separation # From Kinematics
+        angular_vel = (self.wheel_radius * phi_right - self.wheel_radius * phi_left) / self.wheel_separation # From Kinematics
+        ds = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2
+        d_theta = (self.wheel_radius * phi_right - self.wheel_radius * phi_left) / self.wheel_separation
+        self.pos_theta += d_theta
+        self.pos_x += ds * cos(self.pos_theta)
+        self.pos_y += ds * sin(self.pos_theta)
 
         self.get_logger().info("Linear_Velocity: {}, Angular_velocity: {}".format(linear_vel, angular_vel))
+        self.get_logger().info("X Positon: {}, Y Position: {}, Theta: {}".format(self.pos_x, self.pos_y, self.pos_theta))
 
 
 def main():
