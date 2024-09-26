@@ -30,7 +30,7 @@ class simpleController(Node):
         
         self.left_wheel_prev_pos = 0.0
         self.right_wheel_prev_pos = 0.0
-        self.prev_time = self.get_clock().now()
+        
         
         self.pos_x = 0.0
         self.pos_y = 0.0
@@ -65,8 +65,10 @@ class simpleController(Node):
         self.transform_stamped = TransformStamped()
         self.transform_stamped.header.frame_id = "odom"
         self.transform_stamped.child_frame_id = "base_footprint"
-        self
+
         self.get_logger().info("The conversion matrix is {}".format(self.speed_conversion_matrix))
+        self.prev_time = self.get_clock().now()
+
 
     def velCallback(self, msg):
         robot_speed = np.array([[msg.twist.linear.x],
@@ -101,8 +103,8 @@ class simpleController(Node):
 
         linear_vel = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2 # From Kinematics
         angular_vel = (self.wheel_radius * phi_right - self.wheel_radius * phi_left) / self.wheel_separation # From Kinematics
-        ds = (self.wheel_radius * phi_right + self.wheel_radius * phi_left) / 2
-        d_theta = (self.wheel_radius * phi_right - self.wheel_radius * phi_left) / self.wheel_separation
+        ds = (self.wheel_radius * dp_right + self.wheel_radius * dp_left) / 2
+        d_theta = (self.wheel_radius * dp_right - self.wheel_radius * dp_left) / self.wheel_separation
         self.pos_theta += d_theta
         self.pos_x += ds * cos(self.pos_theta)
         self.pos_y += ds * sin(self.pos_theta)
