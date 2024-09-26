@@ -20,14 +20,16 @@ class bumperbotPath(Node):
         # basically poseStamped.pose = PoseWithCovariance.Pose
 
     def odomCallback(self, msg):
-        pose = PoseStamped()
-        pose.header.frame_id = "base_link"
-        pose.header.stamp = self.get_clock().now().to_msg()
-        pose.pose = msg.pose.pose
+        curr_pose = PoseStamped()
+        curr_pose.header.frame_id = msg.header.frame_id
+        curr_pose.header.stamp = self.get_clock().now().to_msg()
+        curr_pose.pose = msg.pose.pose
 
-        self.path_arr.poses.append(pose)
+        self.path_arr.header.frame_id = msg.header.frame_id
+        self.path_arr.header.stamp = self.get_clock().now().to_msg()
+        self.path_arr.poses.append(curr_pose)
         self.trajectory_pub.publish(self.path_arr)
-        self.get_logger().info("Publishing to trajectory")
+        # self.get_logger().info("Publishing pose: {}".format(curr_pose))
 
 
 def main():
