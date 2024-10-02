@@ -28,13 +28,13 @@ def generate_launch_description():
         )
     
     ros_distro = os.environ["ROS_DISTRO"]
-    is_ignition = "True" if ros_distro == "humble" else "False"
+    # is_ignition = "True" if ros_distro == "humble" else "False"
     
     robot_description = ParameterValue(Command([
             "xacro ",
             LaunchConfiguration("model"),
-            " is_ignition:=",
-            is_ignition
+            # " is_ignition:=",
+            # is_ignition
         ]),
         value_type=str
     )
@@ -47,10 +47,9 @@ def generate_launch_description():
 
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
+                    get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py")]),
                 launch_arguments=[
-                    ("gz_args", [" -v 4", " -r"]
-                    )
+                    ("gz_args", "-v 4 -r" )
                 ]
              )
 

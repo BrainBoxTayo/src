@@ -2,6 +2,7 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bumperbot">
 
+    <xacro:arg name="is_humble" default="false"/>
     <xacro:include filename="$(find bumperbot_description)/urdf/bumperbot_gazebo.xacro" />
     <xacro:include filename="$(find bumperbot_description)/urdf/bumperbot_ros2_control.xacro" />
 

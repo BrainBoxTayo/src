@@ -59,10 +59,20 @@
     </gazebo>
 
     <gazebo>
-        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-            <robot_param>robot_description</robot_param>
-            <robot_param_node>robot_state_publisher</robot_param_node>
-            <parameters>$(find bumperbot_controller)/config/bumperbot_controllers.yaml</parameters>
-        </plugin>
+    
+        <xacro:if value="$(arg is_humble)">
+            <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+                <robot_param>robot_description</robot_param>
+                <robot_param_node>robot_state_publisher</robot_param_node>
+                <parameters>$(find bumperbot_controller)/config/bumperbot_controllers.yaml</parameters>
+            </plugin>
+        </xacro:if>
+        
+        <xacro:unless value="$(arg is_humble)">
+            <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                <parameters>$(find bumperbot_controller)/config/bumperbot_controllers.yaml</parameters>
+            </plugin>
+        </xacro:unless>
+            
     </gazebo>
 </robot>

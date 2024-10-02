@@ -3,9 +3,22 @@
 <robot name="bumperbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <ros2_control type="system" name="RobotSystem">
-        <hardware>
-            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-        </hardware>
+
+        <!-- for docker image-->
+
+        <xacro:if value="$(arg is_humble)">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+        </xacro:if>
+
+        <!-- For Local Jazzy Install-->
+        <xacro:unless value="$(arg is_humble)">
+            <hardware>
+                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+            </hardware>
+        </xacro:unless>
+
 
         <joint name="wheel_right_joint">
             <command_interface name="velocity">
