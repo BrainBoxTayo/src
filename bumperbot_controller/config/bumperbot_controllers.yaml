@@ -44,7 +44,7 @@ bumperbot_controller:
       x:
         has_velocity_limits: true
         max_velocity: 1.0
-        min_velocity: -0.5
+        min_velocity: -1.0
         has_acceleration_limits: true
         max_acceleration: 0.8
         min_acceleration: -0.4

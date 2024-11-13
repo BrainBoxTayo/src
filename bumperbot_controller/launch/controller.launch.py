@@ -19,7 +19,8 @@ def noisy_controller(context, *args, **kwargs):
         executable="noisy_controller.py",
         parameters=[
             {"wheel_radius": wheel_radius + wheel_radius_error,
-             "wheel_separation": wheel_separation + wheel_separation_error}]
+             "wheel_separation": wheel_separation + wheel_separation_error}
+             ]
     )
     return [noisy_controller_py]
 
@@ -43,7 +44,7 @@ def generate_launch_description():
 
     use_simple_controller_arg = DeclareLaunchArgument(
         "use_simple_controller",
-        default_value="True"
+        default_value="False"
     )
 
     wheel_radius_error_arg = DeclareLaunchArgument(
@@ -116,8 +117,8 @@ def generate_launch_description():
         wheel_separation_arg,
         wheel_radius_error_arg,
         wheel_separation_error_arg,
-        joint_state_broadcaster_spawner,
         simple_controller,
+        joint_state_broadcaster_spawner,        
         wheel_controller_spawner,
         noisy_controller_launch
     ])
