@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'bumperbot_path = bumperbot_utils.bumperbot_path:main'
+            'bumperbot_path = bumperbot_utils.bumperbot_path:main',
+            'safety_stop = bumperbot_utils.safety_stop:main' 
         ],
     },
 )

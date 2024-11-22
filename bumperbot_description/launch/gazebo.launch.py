@@ -66,7 +66,10 @@ def generate_launch_description():
         executable="create",
         output="screen",
         arguments=["-topic", "robot_description",
-                   "-name", "bumperbot"],
+                   "-name", "bumperbot",
+                   "-x", "0.0",
+                   "-y", "0.0",
+                   "-z", "1.0"],
     )
 
     gz_ros2_bridge = Node(

@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument, GroupAction, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, GroupAction, OpaqueFunction, TimerAction
 from launch.substitutions import LaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
 
@@ -20,7 +20,7 @@ def noisy_controller(context, *args, **kwargs):
         parameters=[
             {"wheel_radius": wheel_radius + wheel_radius_error,
              "wheel_separation": wheel_separation + wheel_separation_error}
-             ]
+        ]
     )
     return [noisy_controller_py]
 
@@ -63,7 +63,12 @@ def generate_launch_description():
     wheel_separation = LaunchConfiguration("wheel_separation")
     use_simple_controller = LaunchConfiguration("use_simple_controller")
 
-    joint_state_broadcaster_spawner = Node(
+    
+
+    wheel_controller_spawner = TimerAction(
+        period=10.0,  # delay by 30 seconds
+        actions=[
+        Node(
         package="controller_manager",
         executable="spawner",
         arguments=[
@@ -71,17 +76,20 @@ def generate_launch_description():
             "--controller-manager",
             "/controller_manager"
         ]
-    )
+    ),
+        Node(
+            package="controller_manager",
+            executable="spawner",
+            arguments=[
+                "bumperbot_controller",
+                "--controller-manager",
+                "/controller_manager",
+            ],
+            condition=UnlessCondition(use_simple_controller)
+        ),
+        
+         ]
 
-    wheel_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "bumperbot_controller",
-            "--controller-manager",
-            "/controller_manager"
-        ],
-        condition=UnlessCondition(use_simple_controller)
     )
 
     simple_controller = GroupAction(
@@ -118,7 +126,6 @@ def generate_launch_description():
         wheel_radius_error_arg,
         wheel_separation_error_arg,
         simple_controller,
-        joint_state_broadcaster_spawner,        
         wheel_controller_spawner,
         noisy_controller_launch
     ])
