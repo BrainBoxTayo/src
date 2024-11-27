@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+
+
+    <!-- Base Link -->
+    <link name="cam_base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://bumperbot_description/meshes/cam_base_link.STL" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://bumperbot_description/meshes/cam_base_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="foundation_!" type="fixed">
+        <parent link="base_footprint" />
+        <child link="cam_base_link" />
+        <origin xyz="2 2 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+
+    <!-- Macro for Camera Links -->
+    <xacro:macro name="camera_link" params="name xyz rpy filename">
+        <link name="${name}">
+            <visual>
+                <origin xyz="${xyz}" rpy="${rpy}" />
+                <geometry>
+                    <mesh filename="${filename}" />
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="${xyz}" rpy="${rpy}" />
+                <geometry>
+                    <mesh filename="${filename}" />
+                </geometry>
+            </collision>
+        </link>
+    </xacro:macro>
+
+    <!-- Macro for Camera Joints -->
+    <xacro:macro name="camera_joint" params="name parent child xyz rpy">
+        <joint name="${name}" type="fixed">
+            <origin xyz="${xyz}" rpy="${rpy}" />
+            <parent link="${parent}" />
+            <child link="${child}" />
+        </joint>
+    </xacro:macro>
+    <xacro:macro name="camera_optical_link" params="name parent child">
+        <joint name="${name}" type="fixed">
+            <parent link="${parent}" />
+            <child link="${child}" />
+            <origin xyz="0 0 0" rpy="-1.5708 0 1.5708" />
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="camera_gazebo_ref" params="link_name camera_name">
+        <gazebo reference="${link_name}">
+            <gz_frame_id>${link_name}</gz_frame_id>
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+            <update_rate>5</update_rate>
+            <sensor name="${camera_name}" type="camera">
+                <pose>0 0 0 0 0 0</pose>
+                <camera>
+                    <horizontal_fov>1.047</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.05</near>
+                        <far>8.0</far>
+                    </clip>
+                </camera>
+            </sensor>
+        </gazebo>
+
+    </xacro:macro>
+
+    <!-- Define Cameras -->
+    <xacro:camera_link
+        name="camera_link_north"
+        xyz="0 0 0"
+        rpy="0 0 0"
+        filename="package://bumperbot_description/meshes/camera_link_north.STL"
+    />
+    <xacro:camera_joint
+        name="cam_joint_north"
+        parent="cam_base_link"
+        child="camera_link_north"
+        xyz="-0.23575 0 3.391"
+        rpy="0.15764 -0.17851 -0.028217" />
+    <xacro:camera_optical_link
+        name="camera_optical_link_north"
+        parent="camera_link_north"
+        child="camera_link_optical_north" />
+    <link name="camera_link_optical_north" />
+    <xacro:camera_gazebo_ref link_name="camera_link_optical_north" camera_name="camera_north" />
+
+    <xacro:camera_link
+        name="camera_link_east"
+        xyz="0 0 0"
+        rpy="0 0 0"
+        filename="package://bumperbot_description/meshes/camera_link_east.STL"
+    />
+    <xacro:camera_joint
+        name="cam_joint_east"
+        parent="cam_base_link"
+        child="camera_link_east"
+        xyz="0 -0.23575 3.511"
+        rpy="-0.15257 0.18285 -1.5708" />
+    <xacro:camera_optical_link
+        name="camera_optical_link_east"
+        parent="camera_link_east"
+        child="camera_link_optical_east" />
+    <link name="camera_link_optical_east" />
+    <xacro:camera_gazebo_ref link_name="camera_link_optical_east" camera_name="camera_east" />
+
+    <xacro:camera_link
+        name="camera_link_south"
+        xyz="0 0 0"
+        rpy="0 0 0"
+        filename="package://bumperbot_description/meshes/camera_link_south.STL"
+    />
+    <xacro:camera_joint
+        name="cam_joint_south"
+        parent="cam_base_link"
+        child="camera_link_south"
+        xyz="0.23575 0 3.391"
+        rpy="0.15257 -0.18285 3.1416" />
+    <xacro:camera_optical_link
+        name="camera_optical_link_south"
+        parent="camera_link_south"
+        child="camera_link_optical_south" />
+    <link name="camera_link_optical_south" />
+    <xacro:camera_gazebo_ref link_name="camera_link_optical_south" camera_name="camera_south" />
+
+    <xacro:camera_link
+        name="camera_link_west"
+        xyz="0 0 0"
+        rpy="0 0 0"
+        filename="package://bumperbot_description/meshes/camera_link_west.STL"
+    />
+    <xacro:camera_joint
+        name="cam_joint_west"
+        parent="cam_base_link"
+        child="camera_link_west"
+        xyz="0 0.23575 3.511"
+        rpy="-0.15257 0.18285 1.5708" />
+    <xacro:camera_optical_link
+        name="camera_optical_link_west"
+        parent="camera_link_west"
+        child="camera_link_optical_west" />
+    <link name="camera_link_optical_west" />
+    <xacro:camera_gazebo_ref link_name="camera_link_optical_west" camera_name="camera_west" />
+
+</robot>

@@ -30,6 +30,18 @@ class TwistRelayNode(Node):
             10
         )
 
+         # Nav2 subscription and publication
+        self.nav_sub = self.create_subscription(
+            Twist,
+            "/cmd_vel",  # Unstamped Nav2 output
+            self.nav_twist_callback,
+            10
+        )
+        self.nav_pub = self.create_publisher(
+            Twist,  # Stamped output for twist_mux
+            "/nav_vel",
+            10
+        )
     def controller_twist_callback(self, msg):
         twist_stamped = TwistStamped()
         twist_stamped.header.stamp = self.get_clock().now().to_msg()
@@ -40,6 +52,10 @@ class TwistRelayNode(Node):
         twist = Twist()
         twist = msg.twist
         self.joy_pub.publish(twist)
+
+    def nav_twist_callback(self, msg):
+        self.nav_pub.publish(msg)
+
 
 
 def main(args=None):

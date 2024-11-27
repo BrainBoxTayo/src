@@ -95,7 +95,9 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 os.path.join(get_package_share_directory("nav2_bringup"),
                              "launch", "navigation_launch.py"),
-                launch_arguments={"use_sim_time": "True"}.items()
+                launch_arguments={
+                    "use_sim_time": "True",
+                    }.items()
             )
 
         ]
@@ -108,7 +110,6 @@ def generate_launch_description():
         joystick,
         # safety_stop,
         localization,
-
         slam,
         local_or_slam,
     ])
