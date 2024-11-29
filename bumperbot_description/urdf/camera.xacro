@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="camera_stand">
+
+    <link name="foundation" />
 
 
     <!-- Base Link -->
@@ -17,10 +19,17 @@
                 <mesh filename="package://bumperbot_description/meshes/cam_base_link.STL" />
             </geometry>
         </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0.0 0.0 0.0" />
+            <mass value="1" />
+            <inertia ixx="1" ixy="0" ixz="0"
+                iyy="1" iyz="0"
+                izz="1" />
+        </inertial>
     </link>
 
-    <joint name="foundation_!" type="fixed">
-        <parent link="base_footprint" />
+    <joint name="fixation" type="fixed">
+        <parent link="foundation" />
         <child link="cam_base_link" />
         <origin xyz="2 2 0" rpy="0 0 0" />
         <axis xyz="0 0 0" />
@@ -42,6 +51,15 @@
                     <mesh filename="${filename}" />
                 </geometry>
             </collision>
+
+            <inertial>
+                <origin xyz="0 0 0" rpy="0.0 0.0 0.0" />
+                <mass value="1" />
+                <inertia ixx="1" ixy="0" ixz="0"
+                    iyy="1" iyz="0"
+                    izz="1" />
+            </inertial>
+
         </link>
     </xacro:macro>
 
@@ -63,13 +81,15 @@
 
     <xacro:macro name="camera_gazebo_ref" params="link_name camera_name">
         <gazebo reference="${link_name}">
-            <gz_frame_id>${link_name}</gz_frame_id>
-            <always_on>true</always_on>
-            <visualize>true</visualize>
-            <update_rate>5</update_rate>
+
             <sensor name="${camera_name}" type="camera">
+                <gz_frame_id>${link_name}</gz_frame_id>
+                <always_on>true</always_on>
+                <visualize>true</visualize>
+                <update_rate>10</update_rate>
                 <pose>0 0 0 0 0 0</pose>
                 <camera>
+                    <camera_info_topic>${camera_name}/camera_info</camera_info_topic>
                     <horizontal_fov>1.047</horizontal_fov>
                     <image>
                         <width>640</width>
@@ -81,6 +101,7 @@
                         <far>8.0</far>
                     </clip>
                 </camera>
+                <topic>${camera_name}/image_raw</topic>
             </sensor>
         </gazebo>
 

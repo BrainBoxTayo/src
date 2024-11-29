@@ -46,11 +46,14 @@ def generate_launch_description():
         value_type=str
     )
 
+    
+
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         parameters=[{"robot_description": robot_description}]
     )
+
 
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
@@ -69,7 +72,7 @@ def generate_launch_description():
                    "-name", "bumperbot",
                    "-x", "0.0",
                    "-y", "0.0",
-                   "-z", "1.0"],
+                   "-z", "0.5"],
     )
 
     gz_ros2_bridge = Node(
@@ -79,7 +82,6 @@ def generate_launch_description():
             "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
             "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/images@sensor_msgs/msg/Image[gz.msgs.Image",
         ],
         remappings=[
             ("/imu", "/imu/out")

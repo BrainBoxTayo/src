@@ -27,6 +27,7 @@ def generate_launch_description():
         ),
     )
 
+
     controller = IncludeLaunchDescription(
         os.path.join(
             get_package_share_directory("bumperbot_controller"),
@@ -70,6 +71,18 @@ def generate_launch_description():
     #     output="screen"
     # )
 
+    gazebo2 = TimerAction(
+        period=20.0,
+        actions=[
+            IncludeLaunchDescription(
+                os.path.join(
+                    get_package_share_directory("bumperbot_description"),
+                    "launch",
+                    "cam_gazebo.launch.py"
+                ),
+            )]
+    )
+
     local_or_slam = TimerAction(
         period=15.0,
         actions=[
@@ -97,7 +110,7 @@ def generate_launch_description():
                              "launch", "navigation_launch.py"),
                 launch_arguments={
                     "use_sim_time": "True",
-                    }.items()
+                }.items()
             )
 
         ]
@@ -106,6 +119,7 @@ def generate_launch_description():
     return LaunchDescription([
         use_slam_arg,
         gazebo,
+        gazebo2,
         controller,
         joystick,
         # safety_stop,
