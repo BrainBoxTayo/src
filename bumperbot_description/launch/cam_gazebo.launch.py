@@ -15,7 +15,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 def generate_launch_description():
     bumperbot_description = get_package_share_directory("bumperbot_description")
 
-    world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
+    # world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
 
     camera_model_arg = DeclareLaunchArgument(name="camera_model", default_value=os.path.join(
                                         bumperbot_description, "urdf", "camera.xacro"

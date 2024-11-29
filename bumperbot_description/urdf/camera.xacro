@@ -31,7 +31,7 @@
     <joint name="fixation" type="fixed">
         <parent link="foundation" />
         <child link="cam_base_link" />
-        <origin xyz="2 2 0" rpy="0 0 0" />
+        <origin xyz="0 -1 0" rpy="0 0 0" />
         <axis xyz="0 0 0" />
     </joint>
 
@@ -71,13 +71,6 @@
             <child link="${child}" />
         </joint>
     </xacro:macro>
-    <xacro:macro name="camera_optical_link" params="name parent child">
-        <joint name="${name}" type="fixed">
-            <parent link="${parent}" />
-            <child link="${child}" />
-            <origin xyz="0 0 0" rpy="-1.5708 0 1.5708" />
-        </joint>
-    </xacro:macro>
 
     <xacro:macro name="camera_gazebo_ref" params="link_name camera_name">
         <gazebo reference="${link_name}">
@@ -90,7 +83,8 @@
                 <pose>0 0 0 0 0 0</pose>
                 <camera>
                     <camera_info_topic>${camera_name}/camera_info</camera_info_topic>
-                    <horizontal_fov>1.047</horizontal_fov>
+                    <!-- In radians, so approximately 150 degrees-->
+                    <horizontal_fov>2.61799</horizontal_fov>
                     <image>
                         <width>640</width>
                         <height>480</height>
@@ -98,7 +92,7 @@
                     </image>
                     <clip>
                         <near>0.05</near>
-                        <far>8.0</far>
+                        <far>100.0</far>
                     </clip>
                 </camera>
                 <topic>${camera_name}/image_raw</topic>
@@ -120,12 +114,7 @@
         child="camera_link_north"
         xyz="-0.23575 0 3.391"
         rpy="0.15764 -0.17851 -0.028217" />
-    <xacro:camera_optical_link
-        name="camera_optical_link_north"
-        parent="camera_link_north"
-        child="camera_link_optical_north" />
-    <link name="camera_link_optical_north" />
-    <xacro:camera_gazebo_ref link_name="camera_link_optical_north" camera_name="camera_north" />
+    <xacro:camera_gazebo_ref link_name="camera_link_north" camera_name="camera_north" />
 
     <xacro:camera_link
         name="camera_link_east"
@@ -139,12 +128,7 @@
         child="camera_link_east"
         xyz="0 -0.23575 3.511"
         rpy="-0.15257 0.18285 -1.5708" />
-    <xacro:camera_optical_link
-        name="camera_optical_link_east"
-        parent="camera_link_east"
-        child="camera_link_optical_east" />
-    <link name="camera_link_optical_east" />
-    <xacro:camera_gazebo_ref link_name="camera_link_optical_east" camera_name="camera_east" />
+    <xacro:camera_gazebo_ref link_name="camera_link_east" camera_name="camera_east" />
 
     <xacro:camera_link
         name="camera_link_south"
@@ -158,12 +142,7 @@
         child="camera_link_south"
         xyz="0.23575 0 3.391"
         rpy="0.15257 -0.18285 3.1416" />
-    <xacro:camera_optical_link
-        name="camera_optical_link_south"
-        parent="camera_link_south"
-        child="camera_link_optical_south" />
-    <link name="camera_link_optical_south" />
-    <xacro:camera_gazebo_ref link_name="camera_link_optical_south" camera_name="camera_south" />
+    <xacro:camera_gazebo_ref link_name="camera_link_south" camera_name="camera_south" />
 
     <xacro:camera_link
         name="camera_link_west"
@@ -177,11 +156,6 @@
         child="camera_link_west"
         xyz="0 0.23575 3.511"
         rpy="-0.15257 0.18285 1.5708" />
-    <xacro:camera_optical_link
-        name="camera_optical_link_west"
-        parent="camera_link_west"
-        child="camera_link_optical_west" />
-    <link name="camera_link_optical_west" />
-    <xacro:camera_gazebo_ref link_name="camera_link_optical_west" camera_name="camera_west" />
+    <xacro:camera_gazebo_ref link_name="camera_link_west" camera_name="camera_west" />
 
 </robot>
