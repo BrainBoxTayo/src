@@ -72,6 +72,18 @@
         </joint>
     </xacro:macro>
 
+    <xacro:macro name="camera_optical_link_joint" params="name parent child">
+        <joint name="${name}" type="fixed">
+            <parent link="${parent}" />
+            <child link="${child}" />
+            <origin xyz="0 0 0" rpy="0 0 ${pi}" />
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="camera_optical_link" params="name">
+        <link name="${name}"/>
+    </xacro:macro>
+
     <xacro:macro name="camera_gazebo_ref" params="link_name camera_name">
         <gazebo reference="${link_name}">
 
@@ -114,7 +126,13 @@
         child="camera_link_north"
         xyz="-0.23575 0 3.391"
         rpy="0.15764 -0.17851 -0.028217" />
-    <xacro:camera_gazebo_ref link_name="camera_link_north" camera_name="camera_north" />
+    <xacro:camera_optical_link 
+        name="camera_optical_link_north"/>
+    <xacro:camera_optical_link_joint 
+        name="camera_optical_link_joint_north"
+        parent="camera_link_north"
+        child="camera_optical_link_north"/>
+    <xacro:camera_gazebo_ref link_name="camera_optical_link_north" camera_name="camera_north" />
 
     <xacro:camera_link
         name="camera_link_east"
@@ -128,6 +146,7 @@
         child="camera_link_east"
         xyz="0 -0.23575 3.511"
         rpy="-0.15257 0.18285 -1.5708" />
+        
     <xacro:camera_gazebo_ref link_name="camera_link_east" camera_name="camera_east" />
 
     <xacro:camera_link
@@ -142,7 +161,13 @@
         child="camera_link_south"
         xyz="0.23575 0 3.391"
         rpy="0.15257 -0.18285 3.1416" />
-    <xacro:camera_gazebo_ref link_name="camera_link_south" camera_name="camera_south" />
+         <xacro:camera_optical_link 
+        name="camera_optical_link_south"/>
+    <xacro:camera_optical_link_joint 
+        name="camera_optical_link_joint_south"
+        parent="camera_link_south"
+        child="camera_optical_link_south"/>
+    <xacro:camera_gazebo_ref link_name="camera_optical_link_south" camera_name="camera_south" />
 
     <xacro:camera_link
         name="camera_link_west"

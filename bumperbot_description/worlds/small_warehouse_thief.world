@@ -236,21 +236,25 @@
                 <interpolate_x>true</interpolate_x>
             </animation>
             <script>
-                <loop>true</loop>
+                <loop>false</loop>
                 <delay_start>10.000000</delay_start>
                 <auto_start>true</auto_start>
                 <trajectory id="0" type="walk" tension="0.6">
                     <waypoint>
                         <time>0</time>
-                        <pose>5 0 1.0 0 0 0</pose>
+                        <pose>5 0 1.0 0 0 3.142</pose>
                     </waypoint>
                     <waypoint>
                         <time>7</time>
-                        <pose>2.0 0 1.0 0 0 0</pose>
+                        <pose>2.0 0 1.0 0 0 1.576</pose>
                     </waypoint>
                     <waypoint>
                         <time>15</time>
                         <pose>2.0 5 1.0 0 0 1.576</pose>
+                    </waypoint>
+                    <!-- <waypoint>
+                        <time>21</time>
+                        <pose>2.0 0 1.0 0 0 1.576</pose>
                     </waypoint>
                     <waypoint>
                         <time>22</time>
@@ -264,7 +268,7 @@
                         <time>30</time>
                         <pose>5.0 0 1.0 0 0 0</pose>
                     </waypoint>
-                    
+                     -->
                 </trajectory>
             </script>
         </actor>
