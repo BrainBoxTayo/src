@@ -95,8 +95,8 @@
                 <pose>0 0 0 0 0 0</pose>
                 <camera>
                     <camera_info_topic>${camera_name}/camera_info</camera_info_topic>
-                    <!-- In radians, so approximately 150 degrees-->
-                    <horizontal_fov>2.61799</horizontal_fov>
+                    <!-- In radians, so approximately 90 degrees-->
+                    <horizontal_fov>1.571</horizontal_fov>
                     <image>
                         <width>640</width>
                         <height>480</height>
