@@ -169,4 +169,31 @@
             </lidar>
         </sensor>
     </gazebo>
+
+
+    <gazebo reference="cam_link_bumperbot">
+        <sensor name="bumperbot_camera" type="camera">
+            <gz_frame_id>cam_link_bumperbot</gz_frame_id>
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <pose>0 0 0 0 0 0</pose>
+            <camera>
+                <camera_info_topic>bumperbot_camera/camera_info</camera_info_topic>
+                <!-- In radians, so approximately 90 degrees-->
+                <horizontal_fov>1.571</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>100.0</far>
+                </clip>
+            </camera>
+            <topic>bumperbot_camera/image_raw</topic>
+        </sensor>
+    </gazebo>
+
 </robot>

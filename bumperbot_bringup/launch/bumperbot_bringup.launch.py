@@ -17,7 +17,14 @@ def generate_launch_description():
         description="Whether to use SLAM or not"
     )
 
+    use_follower_arg = DeclareLaunchArgument(
+        "use_follower",
+        default_value="True",
+        description="Whether to use the follower node or not"
+    )
+
     use_slam = LaunchConfiguration("use_slam")
+    use_follower = LaunchConfiguration("use_follower")
 
     gazebo = IncludeLaunchDescription(
         os.path.join(
@@ -26,7 +33,6 @@ def generate_launch_description():
             "gazebo.launch.py"
         ),
     )
-
 
     controller = IncludeLaunchDescription(
         os.path.join(
@@ -116,8 +122,90 @@ def generate_launch_description():
         ]
     )
 
+    detector_node = IncludeLaunchDescription(
+        os.path.join(
+            get_package_share_directory("ball_tracker"),
+            "launch",
+            "ball_tracker.launch.py"),
+        launch_arguments=[
+            ("detect_only", "false"),
+            ("follow_only", "false"),
+            ("tune_detection", "false"),
+            ("use_sim_time", "true"),
+            ("image_topic", "/bumperbot_camera/image_raw"),
+            ("cmd_vel_topic", "/nav_vel_tracker"),
+            ("enable_3d_tracker", "true")
+        ],
+        condition=IfCondition(use_follower)
+    )
+    # detector_node_surveillance_north = IncludeLaunchDescription(
+    #     os.path.join(
+    #         get_package_share_directory("ball_tracker"),
+    #         "launch",
+    #         "ball_tracker.launch.py"),
+    #     launch_arguments=[
+    #         ("detect_only", "true"),
+    #         ("follow_only", "false"),
+    #         ("tune_detection", "false"),
+    #         ("use_sim_time", "true"),
+    #         ("image_topic", "/camera_north/image_raw"),
+    #         ("cmd_vel_topic", "null"),
+    #         ("enable_3d_tracker", "false")
+    #     ],
+    #     condition=IfCondition(use_follower)
+    # )
+    # detector_node_surveillance_south = IncludeLaunchDescription(
+    #     os.path.join(
+    #         get_package_share_directory("ball_tracker"),
+    #         "launch",
+    #         "ball_tracker.launch.py"),
+    #     launch_arguments=[
+    #         ("detect_only", "true"),
+    #         ("follow_only", "false"),
+    #         ("tune_detection", "false"),
+    #         ("use_sim_time", "true"),
+    #         ("image_topic", "/camera_south/image_raw"),
+    #         ("cmd_vel_topic", "null"),
+    #         ("enable_3d_tracker", "false")
+    #     ],
+    #     condition=IfCondition(use_follower)
+    # )
+    # detector_node_surveillance_west = IncludeLaunchDescription(
+    #     os.path.join(
+    #         get_package_share_directory("ball_tracker"),
+    #         "launch",
+    #         "ball_tracker.launch.py"),
+    #     launch_arguments=[
+    #         ("detect_only", "true"),
+    #         ("follow_only", "false"),
+    #         ("tune_detection", "false"),
+    #         ("use_sim_time", "true"),
+    #         ("image_topic", "/camera_west/image_raw"),
+    #         ("cmd_vel_topic", "null"),
+    #         ("enable_3d_tracker", "false")
+    #     ],
+    #     condition=IfCondition(use_follower)
+    # )
+    # detector_node_surveillance_east = IncludeLaunchDescription(
+    #     os.path.join(
+    #         get_package_share_directory("ball_tracker"),
+    #         "launch",
+    #         "ball_tracker.launch.py"),
+    #     launch_arguments=[
+    #         ("detect_only", "true"),
+    #         ("follow_only", "false"),
+    #         ("tune_detection", "false"),
+    #         ("use_sim_time", "true"),
+    #         ("image_topic", "/camera_north/image_raw"),
+    #         ("cmd_vel_topic", "null"),
+    #         ("enable_3d_tracker", "false")
+    #     ],
+    #     condition=IfCondition(use_follower)
+    # )
+
     return LaunchDescription([
         use_slam_arg,
+        use_follower_arg,
         gazebo,
         gazebo2,
         controller,
@@ -126,4 +214,9 @@ def generate_launch_description():
         localization,
         slam,
         local_or_slam,
+        detector_node,
+        # detector_node_surveillance_west,
+        # detector_node_surveillance_east,
+        # detector_node_surveillance_north,
+        # detector_node_surveillance_south
     ])
