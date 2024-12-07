@@ -71,12 +71,6 @@ def generate_launch_description():
         condition=IfCondition(use_slam)
     )
 
-    # safety_stop = Node(
-    #     package="bumperbot_utils",
-    #     executable="safety_stop",
-    #     output="screen"
-    # )
-
     gazebo2 = TimerAction(
         period=20.0,
         actions=[
@@ -134,74 +128,12 @@ def generate_launch_description():
             ("use_sim_time", "true"),
             ("image_topic", "/bumperbot_camera/image_raw"),
             ("cmd_vel_topic", "/nav_vel_tracker"),
-            ("enable_3d_tracker", "true")
+            ("enable_3d_tracker", "true"),
+            ("params_file", os.path.join(get_package_share_directory("ball_tracker"), "config", "ball_tracker_params_bumperbot.yaml"))
         ],
         condition=IfCondition(use_follower)
     )
-    # detector_node_surveillance_north = IncludeLaunchDescription(
-    #     os.path.join(
-    #         get_package_share_directory("ball_tracker"),
-    #         "launch",
-    #         "ball_tracker.launch.py"),
-    #     launch_arguments=[
-    #         ("detect_only", "true"),
-    #         ("follow_only", "false"),
-    #         ("tune_detection", "false"),
-    #         ("use_sim_time", "true"),
-    #         ("image_topic", "/camera_north/image_raw"),
-    #         ("cmd_vel_topic", "null"),
-    #         ("enable_3d_tracker", "false")
-    #     ],
-    #     condition=IfCondition(use_follower)
-    # )
-    # detector_node_surveillance_south = IncludeLaunchDescription(
-    #     os.path.join(
-    #         get_package_share_directory("ball_tracker"),
-    #         "launch",
-    #         "ball_tracker.launch.py"),
-    #     launch_arguments=[
-    #         ("detect_only", "true"),
-    #         ("follow_only", "false"),
-    #         ("tune_detection", "false"),
-    #         ("use_sim_time", "true"),
-    #         ("image_topic", "/camera_south/image_raw"),
-    #         ("cmd_vel_topic", "null"),
-    #         ("enable_3d_tracker", "false")
-    #     ],
-    #     condition=IfCondition(use_follower)
-    # )
-    # detector_node_surveillance_west = IncludeLaunchDescription(
-    #     os.path.join(
-    #         get_package_share_directory("ball_tracker"),
-    #         "launch",
-    #         "ball_tracker.launch.py"),
-    #     launch_arguments=[
-    #         ("detect_only", "true"),
-    #         ("follow_only", "false"),
-    #         ("tune_detection", "false"),
-    #         ("use_sim_time", "true"),
-    #         ("image_topic", "/camera_west/image_raw"),
-    #         ("cmd_vel_topic", "null"),
-    #         ("enable_3d_tracker", "false")
-    #     ],
-    #     condition=IfCondition(use_follower)
-    # )
-    # detector_node_surveillance_east = IncludeLaunchDescription(
-    #     os.path.join(
-    #         get_package_share_directory("ball_tracker"),
-    #         "launch",
-    #         "ball_tracker.launch.py"),
-    #     launch_arguments=[
-    #         ("detect_only", "true"),
-    #         ("follow_only", "false"),
-    #         ("tune_detection", "false"),
-    #         ("use_sim_time", "true"),
-    #         ("image_topic", "/camera_north/image_raw"),
-    #         ("cmd_vel_topic", "null"),
-    #         ("enable_3d_tracker", "false")
-    #     ],
-    #     condition=IfCondition(use_follower)
-    # )
+ 
 
     return LaunchDescription([
         use_slam_arg,
@@ -210,13 +142,9 @@ def generate_launch_description():
         gazebo2,
         controller,
         joystick,
-        # safety_stop,
         localization,
         slam,
         local_or_slam,
         detector_node,
-        # detector_node_surveillance_west,
-        # detector_node_surveillance_east,
-        # detector_node_surveillance_north,
-        # detector_node_surveillance_south
+        
     ])

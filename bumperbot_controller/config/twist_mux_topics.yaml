@@ -12,7 +12,7 @@ twist_mux:
       tracker:
         topic: nav_vel_tracker
         timeout: 0.5
-        priority: 70
+        priority: 50
       nav2:
         topic: nav_vel
         timeout: 0.5

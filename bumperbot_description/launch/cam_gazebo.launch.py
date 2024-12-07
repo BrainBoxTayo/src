@@ -3,7 +3,9 @@ from os import pathsep
 from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
 
+
 from launch import LaunchDescription
+from launch.conditions import IfCondition
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -14,6 +16,16 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     bumperbot_description = get_package_share_directory("bumperbot_description")
+    
+    
+    use_follower_arg = DeclareLaunchArgument(
+        "use_follower",
+        default_value="True",
+        description="Whether to use the follower node or not"
+    )
+
+    
+    use_follower = LaunchConfiguration("use_follower")
 
     # world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
 
@@ -51,14 +63,6 @@ def generate_launch_description():
         parameters=[{"robot_description": camera_description}]
     )
 
-    # gazebo = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource([os.path.join(
-    #                 get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py")]),
-    #             launch_arguments={
-    #                 "gz_args": PythonExpression(["'", world_path, " -v 4 -r '"])                 
-    #             }.items()
-                    
-    #          )
 
     gz_spawn_entity = Node(
         package="ros_gz_sim",
@@ -95,13 +99,90 @@ def generate_launch_description():
             ]
     )
 
+    detector_node_surveillance_north = IncludeLaunchDescription(
+        os.path.join(
+            get_package_share_directory("ball_tracker"),
+            "launch",
+            "ball_tracker.launch.py"),
+        launch_arguments=[
+            ("detect_only", "true"),
+            ("namespace", "north"),
+            ("follow_only", "false"),
+            ("tune_detection", "false"),
+            ("use_sim_time", "true"),
+            ("image_topic", "/camera_north/image_raw"),
+            ("cmd_vel_topic", "null"),
+            ("enable_3d_tracker", "true"),
+            ("params_file", os.path.join(get_package_share_directory("ball_tracker"), "config", "ball_tracker_params_camera_north.yaml"))
+        ],
+        condition=IfCondition(use_follower)
+    )
+    detector_node_surveillance_south = IncludeLaunchDescription(
+        os.path.join(
+            get_package_share_directory("ball_tracker"),
+            "launch",
+            "ball_tracker.launch.py"),
+        launch_arguments=[
+            ("detect_only", "true"),
+            ("follow_only", "false"),
+            ("namespace", "south"),
+            ("tune_detection", "false"),
+            ("use_sim_time", "true"),
+            ("image_topic", "/camera_south/image_raw"),
+            ("cmd_vel_topic", "null"),
+            ("enable_3d_tracker", "true"),
+            ("params_file", os.path.join(get_package_share_directory("ball_tracker"), "config", "ball_tracker_params_camera_south.yaml"))
+        ],
+        condition=IfCondition(use_follower)
+    )
+    detector_node_surveillance_west = IncludeLaunchDescription(
+        os.path.join(
+            get_package_share_directory("ball_tracker"),
+            "launch",
+            "ball_tracker.launch.py"),
+        launch_arguments=[
+            ("detect_only", "true"),
+            ("follow_only", "false"),
+            ("namespace", "west"),
+            ("tune_detection", "false"),
+            ("use_sim_time", "true"),
+            ("image_topic", "/camera_west/image_raw"),
+            ("cmd_vel_topic", "null"),
+            ("enable_3d_tracker", "true"),
+            ("params_file", os.path.join(get_package_share_directory("ball_tracker"), "config", "ball_tracker_params_camera_west.yaml"))
+        ],
+        condition=IfCondition(use_follower)
+    )
+    detector_node_surveillance_east = IncludeLaunchDescription(
+        os.path.join(
+            get_package_share_directory("ball_tracker"),
+            "launch",
+            "ball_tracker.launch.py"),
+        launch_arguments=[
+            ("detect_only", "true"),
+            ("follow_only", "false"),
+            ("tune_detection", "false"),
+            ("namespace", "east"),
+            ("use_sim_time", "true"),
+            ("image_topic", "/camera_north/image_raw"),
+            ("cmd_vel_topic", "null"),
+            ("enable_3d_tracker", "true"),
+            ("params_file", os.path.join(get_package_share_directory("ball_tracker"), "config", "ball_tracker_params_camera_east.yaml"))
+        ],
+        
+        condition=IfCondition(use_follower)
+    )
+
     return LaunchDescription([
-        # world_name_arg,
+        use_follower_arg,
         camera_model_arg,
         gazebo_resource_path,
         camera_state_publisher_node,
-        # gazebo,
         gz_spawn_entity,
         gz_ros2_bridge,
-        gz_ros2_image_bridge
+        gz_ros2_image_bridge,
+        detector_node_surveillance_west,
+        detector_node_surveillance_east,
+        detector_node_surveillance_north,
+        detector_node_surveillance_south
     ])
